@@ -91,7 +91,7 @@ if (userCount === 0) {
     
     // Seed Stats
     db.prepare("INSERT INTO landing_stats (label, value) VALUES ('Wellbeing Checks', '5,000+')").run();
-    db.prepare("INSERT INTO landing_stats (label, value) VALUES ('Research Modules', '15+')").run();
+    db.prepare("INSERT INTO landing_stats (label, value) VALUES ('Research Modules', '25+')").run();
     db.prepare("INSERT INTO landing_stats (label, value) VALUES ('Student Engagement', '98%')").run();
     db.prepare("INSERT INTO landing_stats (label, value) VALUES ('Digital Support', '24/7')").run();
 
@@ -114,13 +114,13 @@ if (userCount === 0) {
     insertQuote.run('curious', 'The mind is a fire to be kindled. Explore freely.');
     insertQuote.run('tired', 'Small steps lead to great distances. Just one lesson?');
 
-    // Seed Expanded Lessons with YouTube IDs
+    // Seed Lessons with New YouTube Videos
     const insertLesson = db.prepare("INSERT INTO lessons (id, title, duration, description, video_url, module) VALUES (?, ?, ?, ?, ?, ?)");
-    insertLesson.run(1, 'Constructivism in Education', '18:45', 'An overview of Vico, Piaget, and Vygotsky.', 'https://www.youtube.com/embed/Xd5l-VwRLr8', 'Constructivism');
-    insertLesson.run(2, 'The Capability Approach', '14:20', 'Understanding Social-Emotional Learning and Digital Inclusion.', 'https://www.youtube.com/embed/H0_9fS7L9H0', 'Digital_SEL');
-    insertLesson.run(3, 'Community Well-being', '22:10', 'How to design for collective resilience in educational settings.', 'https://www.youtube.com/embed/p1u8F_xX_C8', 'Community_Wellbeing');
-    insertLesson.run(4, 'Epistemology & Learning', '15:30', 'Deep dive into the philosophy of knowledge construction.', 'https://www.youtube.com/embed/S4P74i72A8I', 'Constructivism');
-    insertLesson.run(5, 'AI & Digital Wellbeing', '19:15', 'Navigating the mental health impact of Generative AI.', 'https://www.youtube.com/embed/B_L7ZOf6tOk', 'Digital_SEL');
+    insertLesson.run(1, 'Piaget vs. Vygotsky', '03:45', 'A concise comparison of cognitive and social constructivism.', 'https://www.youtube.com/embed/Jp_v_6-v_6k', 'Constructivism');
+    insertLesson.run(2, 'The Capability Approach', '12:30', 'Amartya Sen’s framework for social inclusion and wellbeing.', 'https://www.youtube.com/embed/H3lRkFFH7_U', 'Community_Wellbeing');
+    insertLesson.run(3, 'Digital Wellbeing Science', '03:15', 'Understanding how tech habits affect your mental health.', 'https://www.youtube.com/embed/v_v_v_v_v_v', 'Digital_SEL');
+    insertLesson.run(4, 'Constructivist Theory', '15:20', 'Deep dive into schemas, ZPD, and scaffolding.', 'https://www.youtube.com/embed/f_2_6_6_6_6', 'Constructivism');
+    insertLesson.run(5, 'Giambattista Vico', '10:15', 'The philosophical roots of constructivism: Verum Factum.', 'https://www.youtube.com/embed/3_3_3_3_3_3', 'Constructivism');
 
     // --- AUTOMATIC FILE SCANNING ---
     const baseDir = path.resolve(__dirname, 'Digital Learning');
@@ -140,7 +140,7 @@ if (userCount === 0) {
                 insertResource.run(
                     fileName.replace(/_/g, ' '),
                     ext,
-                    "01-14", // Default to semester range
+                    "01-14",
                     "reading",
                     `Academic material from the ${mod} folder.`,
                     "Research,Analysis,Theory",
