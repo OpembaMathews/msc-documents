@@ -1,0 +1,121 @@
+function createBeautifulRCSlides() {
+  var deck = SlidesApp.getActivePresentation();
+  
+  // Theme Colors
+  var COLORS = {
+    BACKGROUND: '#0d1b2a', // Deep Navy
+    ACCENT: '#00b4d8',     // Bright Teal
+    TEXT_MAIN: '#ffffff',  // White
+    TEXT_DIM: '#caf0f8'    // Light Blue-Gray
+  };
+
+  /**
+   * Helper to create a styled slide
+   */
+  function addStyledSlide(titleText, bodyText, isTitleSlide) {
+    var slide = deck.appendSlide();
+    slide.getBackground().setSolidFill(COLORS.BACKGROUND);
+
+    if (isTitleSlide) {
+      // Create a centered Title Box
+      var title = slide.insertShape(SlidesApp.ShapeType.TEXT_BOX, 50, 140, 620, 100);
+      var tRange = title.getText();
+      tRange.setText(titleText);
+      tRange.getTextStyle().setFontFamily('Arial').setFontSize(36).setBold(true).setForegroundColor(COLORS.ACCENT);
+      title.setContentAlignment(SlidesApp.ContentAlignment.MIDDLE);
+      tRange.getParagraphStyle().setParagraphAlignment(SlidesApp.ParagraphAlignment.CENTER);
+
+      // Create a Subtitle
+      var sub = slide.insertShape(SlidesApp.ShapeType.TEXT_BOX, 50, 240, 620, 80);
+      var sRange = sub.getText();
+      sRange.setText(bodyText);
+      sRange.getTextStyle().setFontFamily('Arial').setFontSize(18).setForegroundColor(COLORS.TEXT_DIM);
+      sRange.getParagraphStyle().setParagraphAlignment(SlidesApp.ParagraphAlignment.CENTER);
+
+      // Decorative Line
+      var line = slide.insertShape(SlidesApp.ShapeType.RECTANGLE, 310, 230, 100, 3);
+      line.getFill().setSolidFill(COLORS.ACCENT);
+      line.getBorder().setTransparent();
+
+    } else {
+      // Header Bar
+      var bar = slide.insertShape(SlidesApp.ShapeType.RECTANGLE, 0, 0, 720, 60);
+      bar.getFill().setSolidFill('#1b263b');
+      bar.getBorder().setTransparent();
+
+      // Title in Header
+      var title = slide.insertShape(SlidesApp.ShapeType.TEXT_BOX, 30, 10, 660, 40);
+      var tRange = title.getText();
+      tRange.setText(titleText);
+      tRange.getTextStyle().setFontFamily('Arial').setFontSize(24).setBold(true).setForegroundColor(COLORS.ACCENT);
+
+      // Body Text Box
+      var body = slide.insertShape(SlidesApp.ShapeType.TEXT_BOX, 40, 80, 640, 300);
+      var bRange = body.getText();
+      bRange.setText(bodyText);
+      bRange.getTextStyle().setFontFamily('Arial').setFontSize(16).setForegroundColor(COLORS.TEXT_MAIN);
+      
+      // Line Spacing
+      bRange.getParagraphStyle().setLineSpacing(115);
+
+      // Bottom Accent Line
+      var footerLine = slide.insertShape(SlidesApp.ShapeType.RECTANGLE, 30, 385, 60, 4);
+      footerLine.getFill().setSolidFill(COLORS.ACCENT);
+      footerLine.getBorder().setTransparent();
+    }
+  }
+
+  // Generate the content
+  addStyledSlide(
+    "Radical Constructivism", 
+    "Graduate Research Methodology\nEpistemology & Inquiry in Education", 
+    true
+  );
+
+  addStyledSlide(
+    "1. The Radical Shift", 
+    "• Ontological Reality vs. Experiential World: Research explores 'Viability', not objective 'Truth'.\n\n" +
+    "• The Researcher's Role: Acting as a 'model-builder' to map a subject's mental constructs.\n\n" +
+    "• Adaptive Cognition: Focus shifts from knowledge accuracy to the functional logic of the subject's actions.",
+    false
+  );
+
+  addStyledSlide(
+    "2. The Teaching Experiment", 
+    "• Process Orientation: Observing construction through real-time intervention and interaction.\n\n" +
+    "• Perturbation Strategy: Introducing 'surprises' to trigger conceptual reorganization in the student.\n\n" +
+    "• Second-Order Models: Constructing a 'model of the student's model' to explain learning behavior.",
+    false
+  );
+
+  addStyledSlide(
+    "3. Viability over Validity", 
+    "• Redefining Validity: A model is valid if it 'fits' experience and allows for successful navigation.\n\n" +
+    "• Conceptual Analysis: Deconstructing behaviors into the specific mental operations required to execute them.\n\n" +
+    "• Goal: Mapping the internal logic that makes a response coherent to the learner.",
+    false
+  );
+
+  addStyledSlide(
+    "4. Critical & 'Extreme' Debates", 
+    "• Solipsism Response: RC does not deny the world, only our ability to know it 'as it is'.\n\n" +
+    "• The Social Gap: Critiques regarding individual focus vs. the role of social and cultural tools.\n\n" +
+    "• Assessment Tension: How do we grade 'viability' in a system built on 'correct' answers?",
+    false
+  );
+
+  addStyledSlide(
+    "5. Graduate Inquiry Prompts", 
+    "• PROMPT A: How does replacing 'Truth' with 'Viability' change the ethics of educational research?\n\n" +
+    "• PROMPT B: Can RC be effectively merged with Social-Emotional Learning (SEL) to track emotional growth?\n\n" +
+    "• PROMPT C: How can Digital Learning environments leverage 'perturbation' to accelerate conceptual change?",
+    false
+  );
+
+  addStyledSlide(
+    "Conclusion", 
+    "Radical Constructivism is an architecture of the mind. It challenges the researcher to stop looking for errors and start mapping the survival strategies of the intellect.\n\n" +
+    "In graduate inquiry, this lens transforms every student response into a map for understanding the structure of human experience.",
+    false
+  );
+}
