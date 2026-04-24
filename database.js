@@ -1,5 +1,6 @@
 const Database = require('better-sqlite3');
 const path = require('path');
+const fs = require('fs');
 
 const dbPath = path.resolve(__dirname, 'nexus.db');
 const db = new Database(dbPath);
@@ -66,18 +67,21 @@ db.exec(`CREATE TABLE IF NOT EXISTS lessons (
     id INTEGER PRIMARY KEY,
     title TEXT,
     duration TEXT,
-    description TEXT
+    description TEXT,
+    video_url TEXT,
+    module TEXT
 )`);
 
 db.exec(`CREATE TABLE IF NOT EXISTS resources (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     type TEXT,
     week TEXT,
     category TEXT,
     summary TEXT,
     points TEXT,
-    blog_url TEXT
+    blog_url TEXT,
+    module TEXT
 )`);
 
 // --- 3. SEEDING LOGIC ---
@@ -85,13 +89,9 @@ const userCount = db.prepare("SELECT count(*) as count FROM users").get().count;
 if (userCount === 0) {
     db.prepare("INSERT INTO users (name, level) VALUES (?, ?)").run("Graduate Scholar", "Master");
     
-    // Seed Scores
-    db.prepare("INSERT INTO scores (id, title, score, date) VALUES ('quiz-1', 'Foundations Quiz', 85, '2024-04-10')").run();
-    db.prepare("INSERT INTO scores (id, title, score, date) VALUES ('quiz-2', 'Digital Architectures', 92, '2024-04-15')").run();
-
     // Seed Stats
     db.prepare("INSERT INTO landing_stats (label, value) VALUES ('Wellbeing Checks', '5,000+')").run();
-    db.prepare("INSERT INTO landing_stats (label, value) VALUES ('Research Modules', '12+')").run();
+    db.prepare("INSERT INTO landing_stats (label, value) VALUES ('Research Modules', '15+')").run();
     db.prepare("INSERT INTO landing_stats (label, value) VALUES ('Student Engagement', '98%')").run();
     db.prepare("INSERT INTO landing_stats (label, value) VALUES ('Digital Support', '24/7')").run();
 
@@ -114,25 +114,42 @@ if (userCount === 0) {
     insertQuote.run('curious', 'The mind is a fire to be kindled. Explore freely.');
     insertQuote.run('tired', 'Small steps lead to great distances. Just one lesson?');
 
-    // Seed Lessons
-    const insertLesson = db.prepare("INSERT INTO lessons (id, title, duration, description) VALUES (?, ?, ?, ?)");
-    insertLesson.run(1, 'Foundations of Wellbeing', '12:05', 'Introduction to digital SEL frameworks.');
-    insertLesson.run(2, 'Vico & Constructivism', '18:30', 'Philosophical roots of learning theories.');
-    insertLesson.run(3, 'The Capability Approach', '15:10', 'Understanding social inclusion.');
-    insertLesson.run(4, 'Architectures of Safety', '22:00', 'Designing learning spaces.');
-    insertLesson.run(5, 'AI & Student Wellbeing', '14:45', 'Ethical frameworks for GenAI.');
+    // Seed Expanded Lessons with YouTube IDs
+    const insertLesson = db.prepare("INSERT INTO lessons (id, title, duration, description, video_url, module) VALUES (?, ?, ?, ?, ?, ?)");
+    insertLesson.run(1, 'Constructivism in Education', '18:45', 'An overview of Vico, Piaget, and Vygotsky.', 'https://www.youtube.com/embed/Xd5l-VwRLr8', 'Constructivism');
+    insertLesson.run(2, 'The Capability Approach', '14:20', 'Understanding Social-Emotional Learning and Digital Inclusion.', 'https://www.youtube.com/embed/H0_9fS7L9H0', 'Digital_SEL');
+    insertLesson.run(3, 'Community Well-being', '22:10', 'How to design for collective resilience in educational settings.', 'https://www.youtube.com/embed/p1u8F_xX_C8', 'Community_Wellbeing');
+    insertLesson.run(4, 'Epistemology & Learning', '15:30', 'Deep dive into the philosophy of knowledge construction.', 'https://www.youtube.com/embed/S4P74i72A8I', 'Constructivism');
+    insertLesson.run(5, 'AI & Digital Wellbeing', '19:15', 'Navigating the mental health impact of Generative AI.', 'https://www.youtube.com/embed/B_L7ZOf6tOk', 'Digital_SEL');
 
-    // Seed Resources
-    const initialResources = [
-        { id: 1, name: "Well-being in the Digital Age", type: "pdf", week: "01", category: "reading", summary: "Foundational paper on digital immersion.", points: "Definition,Neuroplasticity,Strategies", blog_url: "#" },
-        { id: 2, name: "Community Well-Being & Innovation", type: "pdf", week: "03", category: "reading", summary: "Fostering community resilience.", points: "Design,SEL,Case Studies", blog_url: "#" }
-    ];
-    const insertResource = db.prepare("INSERT INTO resources (id, name, type, week, category, summary, points, blog_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    initialResources.forEach(r => insertResource.run(r.id, r.name, r.type, r.week, r.category, r.summary, r.points, r.blog_url));
+    // --- AUTOMATIC FILE SCANNING ---
+    const baseDir = path.resolve(__dirname, 'Digital Learning');
+    const modules = ['Constructivism', 'Digital_SEL', 'Community_Wellbeing'];
+    const insertResource = db.prepare("INSERT INTO resources (name, type, week, category, summary, points, blog_url, module) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
-    for (let i = 3; i <= 23; i++) {
-        insertResource.run(i, `Research Material ${i}`, i % 2 === 0 ? "pdf" : "pptx", "11", "reading", "General SEL resource.", "SEL,Education,Data", "#");
-    }
+    modules.forEach(mod => {
+        const modPath = path.join(baseDir, mod);
+        if (fs.existsSync(modPath)) {
+            const files = fs.readdirSync(modPath);
+            files.forEach(file => {
+                if (file.startsWith('.') || file.endsWith('.db') || file.endsWith('.js')) return;
+                
+                const ext = path.extname(file).replace('.', '');
+                const fileName = path.basename(file, path.extname(file));
+                
+                insertResource.run(
+                    fileName.replace(/_/g, ' '),
+                    ext,
+                    "01-14", // Default to semester range
+                    "reading",
+                    `Academic material from the ${mod} folder.`,
+                    "Research,Analysis,Theory",
+                    "#",
+                    mod
+                );
+            });
+        }
+    });
 }
 
 module.exports = db;
