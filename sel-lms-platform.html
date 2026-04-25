@@ -272,10 +272,13 @@
             document.getElementById('view-landing').classList.add('hidden');
             document.getElementById('view-course').classList.add('hidden');
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+
             if (view === 'landing') {
                 document.getElementById('view-landing').classList.remove('hidden');
                 document.getElementById('nav-landing').classList.add('active');
                 setupUIForUser();
+            } else if (view === 'course') {
+                document.getElementById('view-course').classList.remove('hidden');
             }
         }
 
