@@ -8,7 +8,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
         .nav-item { transition: all 0.2s ease; cursor: pointer; border-bottom: 2px solid transparent; }
         .nav-item:hover { color: #4f46e5; }
@@ -16,18 +16,55 @@
         .glass-card { background: white; border: 1px solid #e2e8f0; border-radius: 24px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1); }
         .video-box { aspect-ratio: 16 / 9; background: #000; border-radius: 32px; overflow: hidden; }
         .hidden { display: none !important; }
-        .login-gradient { background: radial-gradient(circle at top left, #4f46e5 0%, #7c3aed 100%); }
+        .hero-gradient { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
     </style>
 </head>
 <body class="antialiased text-slate-900">
     
+    <!-- PUBLIC LANDING PAGE -->
+    <div id="publicLanding" class="min-h-screen flex flex-col hidden">
+        <nav class="h-20 flex items-center justify-between px-12 bg-white/50 backdrop-blur-md sticky top-0 z-50">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold">N</div>
+                <span class="font-bold text-xl tracking-tight">NEXUS</span>
+            </div>
+            <button onclick="showLogin()" class="px-6 py-2 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-700 transition-all">Sign In</button>
+        </nav>
+
+        <main class="flex-1">
+            <section class="max-w-7xl mx-auto px-12 py-24 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8">
+                    <span class="px-4 py-1.5 bg-indigo-50 text-indigo-600 text-xs font-bold uppercase tracking-widest rounded-full">NTUST Graduate Seminar</span>
+                    <h1 class="text-8xl font-black tracking-tighter leading-[0.9] text-slate-900">Master the <br><span class="text-indigo-600">Science</span> of Learning.</h1>
+                    <p class="text-xl text-slate-500 max-w-lg leading-relaxed">Access the 2026 digital learning curriculum. A unified platform for Constructivism, SEL Science, and Community Wellbeing Innovation.</p>
+                    <div class="flex items-center space-x-4">
+                        <button onclick="showLogin()" class="px-10 py-4 bg-slate-900 text-white rounded-2xl font-bold text-lg hover:bg-indigo-600 transition-all shadow-xl">Get Started</button>
+                        <div class="flex -space-x-3">
+                            <div class="w-12 h-12 rounded-full border-4 border-white bg-slate-200"></div>
+                            <div class="w-12 h-12 rounded-full border-4 border-white bg-indigo-200"></div>
+                            <div class="w-12 h-12 rounded-full border-4 border-white bg-emerald-200"></div>
+                        </div>
+                        <p class="text-sm font-bold text-slate-400 pl-4">Join 50+ Graduate Scholars</p>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="aspect-square bg-indigo-50 rounded-[64px] rotate-3 absolute inset-0 -z-10"></div>
+                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop" class="rounded-[64px] shadow-2xl" alt="Students">
+                </div>
+            </section>
+        </main>
+    </div>
+
     <!-- LOGIN SCREEN -->
-    <div id="loginScreen" class="fixed inset-0 z-[200] login-gradient flex items-center justify-center p-6">
-        <div class="bg-white rounded-[48px] max-w-lg w-full p-12 text-center space-y-8 shadow-2xl">
-            <div class="space-y-4">
+    <div id="loginScreen" class="fixed inset-0 z-[200] hero-gradient flex items-center justify-center p-6 hidden">
+        <div class="bg-white rounded-[48px] max-w-lg w-full p-12 text-center space-y-8 shadow-2xl relative">
+            <button onclick="showLanding()" class="absolute top-8 left-8 text-slate-400 hover:text-slate-600 transition-all">
+                <i data-lucide="arrow-left" class="w-6 h-6"></i>
+            </button>
+            <div class="space-y-4 pt-4">
                 <div class="w-20 h-20 bg-indigo-600 rounded-[28px] flex items-center justify-center text-white font-bold text-4xl mx-auto shadow-xl">N</div>
-                <h1 class="text-4xl font-black tracking-tight text-slate-900">Nexus Learning</h1>
-                <p class="text-slate-500 text-lg">Master of Science Seminar Portal. Please sign in to track your personal learning progress.</p>
+                <h1 class="text-4xl font-black tracking-tight text-slate-900">Scholar Login</h1>
+                <p class="text-slate-500 text-lg">Sign in with your NTUST or Google account to track your 9-credit progress.</p>
             </div>
             
             <div class="py-4 flex flex-col items-center">
@@ -47,37 +84,23 @@
                      data-logo_alignment="left">
                 </div>
             </div>
-
-            <p class="text-xs text-slate-400">NTUST Graduate Seminar VE5208701 / VE5914701 / VE5915701</p>
         </div>
     </div>
 
     <!-- MAIN APP -->
     <div id="appRoot" class="min-h-screen flex flex-col hidden">
-        
-        <!-- TOP NAVIGATION -->
         <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-8">
             <div class="max-w-7xl mx-auto flex items-center justify-between h-20">
                 <div onclick="showView('landing')" class="flex items-center space-x-3 cursor-pointer">
                     <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold">N</div>
                     <span class="font-bold text-xl tracking-tight">NEXUS</span>
                 </div>
-
                 <div class="flex items-center space-x-8 h-full">
-                    <div onclick="showView('landing')" id="nav-landing" class="nav-item h-full flex items-center px-4 active">
-                        <span class="text-sm">Dashboard</span>
-                    </div>
-                    <div onclick="showCourse('Constructivism')" id="nav-Constructivism" class="nav-item h-full flex items-center px-4">
-                        <span class="text-sm">Constructivism</span>
-                    </div>
-                    <div onclick="showCourse('Digital_SEL')" id="nav-Digital_SEL" class="nav-item h-full flex items-center px-4">
-                        <span class="text-sm">Digital SEL</span>
-                    </div>
-                    <div onclick="showCourse('Community_Wellbeing')" id="nav-Community_Wellbeing" class="nav-item h-full flex items-center px-4">
-                        <span class="text-sm">Wellbeing Innovation</span>
-                    </div>
+                    <div onclick="showView('landing')" id="nav-landing" class="nav-item h-full flex items-center px-4 active"><span class="text-sm">Dashboard</span></div>
+                    <div onclick="showCourse('Constructivism')" id="nav-Constructivism" class="nav-item h-full flex items-center px-4"><span class="text-sm">Constructivism</span></div>
+                    <div onclick="showCourse('Digital_SEL')" id="nav-Digital_SEL" class="nav-item h-full flex items-center px-4"><span class="text-sm">Digital SEL</span></div>
+                    <div onclick="showCourse('Community_Wellbeing')" id="nav-Community_Wellbeing" class="nav-item h-full flex items-center px-4"><span class="text-sm">Wellbeing Innovation</span></div>
                 </div>
-
                 <div class="flex items-center space-x-4 pl-8 border-l border-slate-100">
                     <div class="text-right">
                         <p id="userName" class="text-xs font-bold leading-none">Scholar</p>
@@ -88,10 +111,7 @@
             </div>
         </nav>
 
-        <!-- MAIN CONTENT AREA -->
         <main class="flex-1 p-8">
-            
-            <!-- LANDING SCREEN -->
             <section id="view-landing" class="max-w-6xl mx-auto space-y-12 py-10">
                 <div class="text-center space-y-4">
                     <h1 class="text-7xl font-bold text-slate-900 leading-tight tracking-tight">Your Learning <span class="text-indigo-600">Nexus.</span></h1>
@@ -100,33 +120,25 @@
                 <div id="statsGrid" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-10">
                     <div onclick="showCourse('Constructivism')" class="glass-card p-10 cursor-pointer hover:border-indigo-600 transition-all text-center">
-                        <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                            <i data-lucide="brain" class="w-8 h-8"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-2">Education Theory</h3>
+                        <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6"><i data-lucide="brain" class="w-8 h-8"></i></div>
+                        <h3 class="text-2xl font-bold mb-2 text-indigo-900">Education Theory</h3>
                         <p class="text-slate-500">Deep dive into constructivist frameworks.</p>
                     </div>
                     <div onclick="showCourse('Digital_SEL')" class="glass-card p-10 cursor-pointer hover:border-emerald-600 transition-all text-center">
-                        <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                            <i data-lucide="shield-check" class="w-8 h-8"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-2">Digital SEL</h3>
+                        <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-6"><i data-lucide="shield-check" class="w-8 h-8"></i></div>
+                        <h3 class="text-2xl font-bold mb-2 text-emerald-900">Digital SEL</h3>
                         <p class="text-slate-500">Mental health in connected spaces.</p>
                     </div>
                     <div onclick="showCourse('Community_Wellbeing')" class="glass-card p-10 cursor-pointer hover:border-amber-600 transition-all text-center">
-                        <div class="w-16 h-16 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                            <i data-lucide="globe" class="w-8 h-8"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-2">Wellbeing Innovation</h3>
+                        <div class="w-16 h-16 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-6"><i data-lucide="globe" class="w-8 h-8"></i></div>
+                        <h3 class="text-2xl font-bold mb-2 text-amber-900">Wellbeing Innovation</h3>
                         <p class="text-slate-500">Capability approach and inclusion.</p>
                     </div>
                 </div>
             </section>
 
-            <!-- COURSE VIEW -->
             <section id="view-course" class="hidden max-w-7xl mx-auto">
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
-                    
                     <div class="lg:col-span-3 space-y-6">
                         <div class="video-box shadow-2xl bg-slate-900 ring-4 ring-white relative overflow-hidden">
                             <iframe id="mainPlayer" class="w-full h-full" src="" frameborder="0" allowfullscreen></iframe>
@@ -136,44 +148,24 @@
                                 <p class="mt-2 text-emerald-100 text-sm">+0.75 Credits Earned</p>
                             </div>
                         </div>
-
                         <div class="flex items-center justify-between bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
                             <div class="flex items-center space-x-3 pl-2">
                                 <span class="px-2 py-1 bg-indigo-50 text-indigo-600 text-[9px] font-bold uppercase tracking-widest rounded">Active</span>
                                 <h4 id="activeLessonTitle" class="font-bold text-slate-700 text-sm truncate max-w-[300px]">Select a lesson</h4>
                             </div>
                             <button id="completeBtn" onclick="markComplete()" class="px-6 py-2 bg-emerald-600 text-white rounded-xl font-bold text-xs hover:bg-emerald-700 transition-all flex items-center shadow-lg shadow-emerald-100">
-                                <i data-lucide="check-circle-2" class="w-3.5 h-3.5 mr-2"></i>
-                                Mark Complete
+                                <i data-lucide="check-circle-2" class="w-3.5 h-3.5 mr-2"></i>Mark Complete
                             </button>
                         </div>
-
                         <div class="flex items-end justify-between pt-4">
-                            <div>
-                                <h2 id="courseTitle" class="text-4xl font-bold tracking-tight text-slate-900">Course Title</h2>
-                                <p class="text-slate-500 mt-1">Research summaries and academic insights.</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Your Credits</p>
-                                <div class="flex items-center space-x-1.5">
-                                    <span id="moduleCredits" class="text-xl font-black text-indigo-600">0.0</span>
-                                    <span class="text-slate-400 font-bold text-sm">/ 3.0</span>
-                                </div>
-                            </div>
+                            <div><h2 id="courseTitle" class="text-4xl font-bold tracking-tight text-slate-900">Course Title</h2><p class="text-slate-500 mt-1">Research summaries and academic insights.</p></div>
+                            <div class="text-right"><p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Your Credits</p><div class="flex items-center space-x-1.5"><span id="moduleCredits" class="text-xl font-black text-indigo-600">0.0</span><span class="text-slate-400 font-bold text-sm">/ 3.0</span></div></div>
                         </div>
-
                         <div id="courseDocs" class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4"></div>
                     </div>
-
                     <div class="space-y-6">
                         <div class="bg-white p-6 rounded-[32px] border border-slate-200 shadow-sm">
-                            <div class="flex items-center justify-between mb-6 px-1">
-                                <h3 class="font-bold text-lg flex items-center">
-                                    <i data-lucide="play-circle" class="w-5 h-5 mr-2 text-indigo-600"></i>
-                                    Path
-                                </h3>
-                                <span id="completedCount" class="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-md">0/4 DONE</span>
-                            </div>
+                            <div class="flex items-center justify-between mb-6 px-1"><h3 class="font-bold text-lg flex items-center"><i data-lucide="play-circle" class="w-5 h-5 mr-2 text-indigo-600"></i>Path</h3><span id="completedCount" class="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-md">0/4 DONE</span></div>
                             <div id="videoList" class="space-y-3"></div>
                         </div>
                     </div>
@@ -184,37 +176,17 @@
 
     <!-- PREVIEW MODAL -->
     <div id="previewModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-sm hidden">
-        <div class="bg-white rounded-[40px] max-w-2xl w-full shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+        <div class="bg-white rounded-[40px] max-w-2xl w-full shadow-2xl overflow-hidden">
             <div class="p-10 space-y-8">
                 <div class="flex justify-between items-start">
-                    <div class="space-y-2">
-                        <span id="modalType" class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-indigo-50 text-indigo-600">PDF</span>
-                        <h2 id="modalTitle" class="text-3xl font-bold text-slate-900 leading-tight">Document Title</h2>
-                    </div>
-                    <button onclick="closeModal()" class="p-2 hover:bg-slate-100 rounded-full transition-all">
-                        <i data-lucide="x" class="w-6 h-6 text-slate-400"></i>
-                    </button>
+                    <div class="space-y-2"><span id="modalType" class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-indigo-50 text-indigo-600">PDF</span><h2 id="modalTitle" class="text-3xl font-bold text-slate-900 leading-tight">Document Title</h2></div>
+                    <button onclick="closeModal()" class="p-2 hover:bg-slate-100 rounded-full transition-all"><i data-lucide="x" class="w-6 h-6 text-slate-400"></i></button>
                 </div>
-
                 <div class="space-y-6">
-                    <div>
-                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Executive Summary</h4>
-                        <p id="modalSummary" class="text-slate-600 leading-relaxed text-lg">Summary...</p>
-                    </div>
-                    <div>
-                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Key Takeaways</h4>
-                        <ul id="modalPoints" class="grid grid-cols-1 gap-3"></ul>
-                    </div>
+                    <div><h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Executive Summary</h4><p id="modalSummary" class="text-slate-600 leading-relaxed text-lg">Summary...</p></div>
+                    <div><h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Key Takeaways</h4><ul id="modalPoints" class="grid grid-cols-1 gap-3"></ul></div>
                 </div>
-
-                <div class="pt-4 flex items-center space-x-4">
-                    <a id="blogLink" href="#" class="flex-1 bg-indigo-600 text-white py-4 rounded-2xl font-bold text-center hover:bg-indigo-700 transition-all shadow-lg">
-                        Read Full Blog Post
-                    </a>
-                    <button onclick="closeModal()" class="px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all">
-                        Close
-                    </button>
-                </div>
+                <div class="pt-4 flex items-center space-x-4"><a id="blogLink" href="#" class="flex-1 bg-indigo-600 text-white py-4 rounded-2xl font-bold text-center hover:bg-indigo-700 transition-all shadow-lg">Read Full Blog Post</a><button onclick="closeModal()" class="px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all">Close</button></div>
             </div>
         </div>
     </div>
@@ -227,23 +199,28 @@
         let currentLessonId = null;
 
         async function init() {
-            // Initial check for session
-            const stateRes = await fetch(`${API_URL}/state`);
-            if (stateRes.ok) {
-                userState = await stateRes.json();
-                setupUIForUser();
-            } else {
-                showLogin();
-            }
+            try {
+                // Fetch global data first to avoid blank pages
+                const [initRes, resData] = await Promise.all([
+                    fetch(`${API_URL}/init-data`),
+                    fetch(`${API_URL}/resources`)
+                ]);
+                const data = await initRes.json();
+                allLessons = data.lessons;
+                allResources = await resData.json();
 
-            // Global data (can be fetched anytime)
-            const initRes = await fetch(`${API_URL}/init-data`);
-            const data = await initRes.json();
-            allLessons = data.lessons;
-            
-            const resData = await fetch(`${API_URL}/resources`);
-            allResources = await resData.json();
-            
+                // Check session
+                const stateRes = await fetch(`${API_URL}/state`);
+                if (stateRes.ok) {
+                    userState = await stateRes.json();
+                    setupUIForUser();
+                } else {
+                    showLanding();
+                }
+            } catch (err) {
+                console.error("Init failed", err);
+                showLanding();
+            }
             lucide.createIcons();
         }
 
@@ -253,44 +230,35 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ credential: response.credential })
             });
-            
-            if (res.ok) {
-                await init();
-            }
+            if (res.ok) await init();
         }
 
         function setupUIForUser() {
+            document.getElementById('publicLanding').classList.add('hidden');
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('appRoot').classList.remove('hidden');
             document.getElementById('userName').innerText = userState.user.name;
             document.getElementById('userPicture').src = userState.user.picture;
             
-            // Refresh stats on dashboard
             const statsGrid = document.getElementById('statsGrid');
             const totalCredits = (userState.completedLessons.length * 0.75).toFixed(2);
-            
             statsGrid.innerHTML = `
-                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm text-center">
-                    <p class="text-3xl font-bold text-indigo-600">${totalCredits}</p>
-                    <p class="text-xs font-bold text-slate-400 uppercase mt-1 tracking-widest">Total Credits Earned</p>
-                </div>
-                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm text-center">
-                    <p class="text-3xl font-bold text-indigo-600">${userState.completedLessons.length}</p>
-                    <p class="text-xs font-bold text-slate-400 uppercase mt-1 tracking-widest">Completed Lessons</p>
-                </div>
-                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm text-center">
-                    <p class="text-3xl font-bold text-indigo-600">9.00</p>
-                    <p class="text-xs font-bold text-slate-400 uppercase mt-1 tracking-widest">Required Credits</p>
-                </div>
-                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm text-center">
-                    <p class="text-3xl font-bold text-indigo-600">${Math.round((totalCredits/9)*100)}%</p>
-                    <p class="text-xs font-bold text-slate-400 uppercase mt-1 tracking-widest">Degree Progress</p>
-                </div>
+                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm text-center"><p class="text-3xl font-bold text-indigo-600">${totalCredits}</p><p class="text-xs font-bold text-slate-400 uppercase mt-1 tracking-widest">Credits Earned</p></div>
+                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm text-center"><p class="text-3xl font-bold text-indigo-600">${userState.completedLessons.length}</p><p class="text-xs font-bold text-slate-400 uppercase mt-1 tracking-widest">Lessons Done</p></div>
+                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm text-center"><p class="text-3xl font-bold text-indigo-600">9.00</p><p class="text-xs font-bold text-slate-400 uppercase mt-1 tracking-widest">Goal Credits</p></div>
+                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm text-center"><p class="text-3xl font-bold text-indigo-600">${Math.round((totalCredits/9)*100)}%</p><p class="text-xs font-bold text-slate-400 uppercase mt-1 tracking-widest">Completion</p></div>
             `;
             lucide.createIcons();
         }
 
+        function showLanding() {
+            document.getElementById('publicLanding').classList.remove('hidden');
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('appRoot').classList.add('hidden');
+        }
+
         function showLogin() {
+            document.getElementById('publicLanding').classList.add('hidden');
             document.getElementById('loginScreen').classList.remove('hidden');
             document.getElementById('appRoot').classList.add('hidden');
         }
@@ -304,17 +272,17 @@
             document.getElementById('view-landing').classList.add('hidden');
             document.getElementById('view-course').classList.add('hidden');
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-
             if (view === 'landing') {
                 document.getElementById('view-landing').classList.remove('hidden');
                 document.getElementById('nav-landing').classList.add('active');
-                setupUIForUser(); // Refresh dashboard
+                setupUIForUser();
             }
         }
 
         function showCourse(module) {
             showView('course');
-            document.getElementById(`nav-${module}`).classList.add('active');
+            const nav = document.getElementById(`nav-${module}`);
+            if (nav) nav.classList.add('active');
 
             const moduleName = module.replace('_', ' ');
             document.getElementById('courseTitle').innerText = moduleName;
@@ -330,12 +298,7 @@
                 const isComplete = userState.completedLessons.includes(l.id);
                 return `
                     <div id="video-card-${l.id}" onclick="playVideo('${l.video_url}', ${l.id}, '${l.title}')" class="video-card bg-white p-5 rounded-3xl border border-slate-200 cursor-pointer hover:border-indigo-600 transition-all shadow-sm flex items-center justify-between group">
-                        <div class="truncate pr-4">
-                            <p class="text-[10px] font-bold ${isComplete ? 'text-emerald-500' : 'text-indigo-600'} uppercase mb-1">
-                                ${isComplete ? 'COMPLETED' : l.duration}
-                            </p>
-                            <h4 class="font-bold text-xs leading-tight truncate">${l.title}</h4>
-                        </div>
+                        <div class="truncate pr-4"><p class="text-[10px] font-bold ${isComplete ? 'text-emerald-500' : 'text-indigo-600'} uppercase mb-1">${isComplete ? 'COMPLETED' : l.duration}</p><h4 class="font-bold text-xs leading-tight truncate">${l.title}</h4></div>
                         ${isComplete ? '<i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 shrink-0"></i>' : '<i data-lucide="play" class="w-4 h-4 text-slate-300 group-hover:text-indigo-600 shrink-0"></i>'}
                     </div>
                 `;
@@ -350,14 +313,8 @@
             const docsCont = document.getElementById('courseDocs');
             docsCont.innerHTML = courseDocs.map(r => `
                 <div class="bg-white p-8 rounded-[32px] border border-slate-200 shadow-sm hover:border-indigo-600 transition-all group">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="p-4 bg-slate-50 rounded-2xl text-slate-400 group-hover:text-indigo-600 group-hover:bg-indigo-50 transition-all">
-                            <i data-lucide="${r.type === 'pdf' ? 'file-text' : 'presentation'}" class="w-8 h-8"></i>
-                        </div>
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-slate-300">${r.type}</span>
-                    </div>
-                    <h4 class="font-bold text-xl mb-2">${r.name}</h4>
-                    <p class="text-sm text-slate-500 mb-8">Master's research document overview.</p>
+                    <div class="flex justify-between items-start mb-6"><div class="p-4 bg-slate-50 rounded-2xl text-slate-400 group-hover:text-indigo-600 group-hover:bg-indigo-50 transition-all"><i data-lucide="${r.type === 'pdf' ? 'file-text' : 'presentation'}" class="w-8 h-8"></i></div><span class="text-[10px] font-bold uppercase tracking-widest text-slate-300">${r.type}</span></div>
+                    <h4 class="font-bold text-xl mb-2">${r.name}</h4><p class="text-sm text-slate-500 mb-8">Master's research document overview.</p>
                     <button onclick="openPreview(${r.id})" class="w-full py-4 bg-slate-900 text-white rounded-2xl text-xs font-bold hover:bg-indigo-600 transition-all shadow-lg">Preview Insight</button>
                 </div>
             `).join('');
@@ -370,39 +327,22 @@
             document.getElementById('modalType').innerText = res.type;
             document.getElementById('modalSummary').innerText = res.summary;
             document.getElementById('blogLink').href = `/blog?id=${res.id}`;
-            document.getElementById('modalPoints').innerHTML = res.points.map(p => `
-                <li class="flex items-center space-x-3 text-slate-600 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i>
-                    <span class="text-sm font-medium">${p}</span>
-                </li>
-            `).join('');
+            document.getElementById('modalPoints').innerHTML = res.points.map(p => `<li class="flex items-center space-x-3 text-slate-600 bg-slate-50 p-4 rounded-2xl border border-slate-100"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i><span class="text-sm font-medium">${p}</span></li>`).join('');
             document.getElementById('previewModal').classList.remove('hidden');
             lucide.createIcons();
         }
 
-        function closeModal() {
-            document.getElementById('previewModal').classList.add('hidden');
-        }
+        function closeModal() { document.getElementById('previewModal').classList.add('hidden'); }
 
         function playVideo(url, id, title) {
             currentLessonId = id;
             document.getElementById('mainPlayer').src = url;
             document.getElementById('activeLessonTitle').innerText = title;
-            
             const isComplete = userState.completedLessons.includes(id);
             const overlay = document.getElementById('completionOverlay');
             const completeBtn = document.getElementById('completeBtn');
-            
-            if (isComplete) {
-                overlay.classList.remove('hidden');
-                completeBtn.classList.add('opacity-50', 'pointer-events-none');
-                completeBtn.innerText = 'Completed';
-            } else {
-                overlay.classList.add('hidden');
-                completeBtn.classList.remove('opacity-50', 'pointer-events-none');
-                completeBtn.innerHTML = '<i data-lucide="check-circle-2" class="w-4 h-4 mr-2"></i> Mark Complete';
-            }
-
+            if (isComplete) { overlay.classList.remove('hidden'); completeBtn.classList.add('opacity-50', 'pointer-events-none'); completeBtn.innerText = 'Completed'; }
+            else { overlay.classList.add('hidden'); completeBtn.classList.remove('opacity-50', 'pointer-events-none'); completeBtn.innerHTML = '<i data-lucide="check-circle-2" class="w-4 h-4 mr-2"></i> Mark Complete'; }
             document.querySelectorAll('.video-card').forEach(card => card.classList.remove('ring-4', 'ring-indigo-100', 'border-indigo-600', 'bg-indigo-50'));
             const activeCard = document.getElementById(`video-card-${id}`);
             if (activeCard) activeCard.classList.add('ring-4', 'ring-indigo-100', 'border-indigo-600', 'bg-indigo-50');
@@ -411,12 +351,7 @@
 
         async function markComplete() {
             if (!currentLessonId) return;
-            const res = await fetch(`${API_URL}/progress`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ lessonId: currentLessonId })
-            });
-
+            const res = await fetch(`${API_URL}/progress`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lessonId: currentLessonId }) });
             if (res.ok) {
                 const stateRes = await fetch(`${API_URL}/state`);
                 userState = await stateRes.json();
