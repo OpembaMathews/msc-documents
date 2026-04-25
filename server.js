@@ -9,7 +9,7 @@ const db = require('./database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '793974376445-clmcg4oub8kaatv352kge9qsqolth0iu.apps.googleusercontent.com';
 const JWT_SECRET = process.env.JWT_SECRET || 'nexus-scholar-secret-2026';
 
 const client = new OAuth2Client(GOOGLE_CLIENT_ID);
