@@ -5,34 +5,43 @@ const fs = require('fs');
 const dbPath = path.resolve(__dirname, 'nexus.db');
 const db = new Database(dbPath);
 
-// --- 1. CORE USER & STATE ---
+// --- 1. MULTI-USER SCHEMA ---
 db.exec(`CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    google_id TEXT UNIQUE,
+    email TEXT,
     name TEXT,
-    level TEXT,
+    picture TEXT,
+    level TEXT DEFAULT 'Master',
     current_view TEXT DEFAULT 'dashboard',
-    current_lesson_id INTEGER DEFAULT 1,
     last_mood TEXT
 )`);
 
 db.exec(`CREATE TABLE IF NOT EXISTS mood_logs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
     mood TEXT,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(id)
 )`);
 
 db.exec(`CREATE TABLE IF NOT EXISTS progress (
-    lesson_id INTEGER PRIMARY KEY
+    user_id INTEGER,
+    lesson_id INTEGER,
+    PRIMARY KEY (user_id, lesson_id),
+    FOREIGN KEY(user_id) REFERENCES users(id)
 )`);
 
 db.exec(`CREATE TABLE IF NOT EXISTS scores (
     id TEXT PRIMARY KEY,
+    user_id INTEGER,
     title TEXT,
     score INTEGER,
-    date TEXT
+    date TEXT,
+    FOREIGN KEY(user_id) REFERENCES users(id)
 )`);
 
-// --- 2. LANDING & CONTENT ---
+// --- 2. GLOBAL CONTENT ---
 db.exec(`CREATE TABLE IF NOT EXISTS landing_stats (id INTEGER PRIMARY KEY, label TEXT, value TEXT)`);
 db.exec(`CREATE TABLE IF NOT EXISTS personas (id INTEGER PRIMARY KEY, title TEXT, description TEXT, icon TEXT, cta_text TEXT, target_view TEXT, color_class TEXT)`);
 db.exec(`CREATE TABLE IF NOT EXISTS features (id INTEGER PRIMARY KEY, title TEXT, description TEXT, icon TEXT, bg_class TEXT, text_class TEXT)`);
@@ -51,24 +60,11 @@ db.exec(`CREATE TABLE IF NOT EXISTS resources (
     file_path TEXT UNIQUE
 )`);
 
-// --- 3. SEEDING LOGIC ---
-const userCount = db.prepare("SELECT count(*) as count FROM users").get().count;
-if (userCount === 0) {
-    db.prepare("INSERT INTO users (name, level) VALUES (?, ?)").run("Graduate Scholar", "Master");
-    
+// --- 3. SEEDING GLOBAL DATA ---
+const lessonCount = db.prepare("SELECT count(*) as count FROM lessons").get().count;
+if (lessonCount === 0) {
     // Seed Stats
-    db.prepare("INSERT INTO landing_stats (label, value) VALUES ('Wellbeing Checks', '5,000+')").run();
-    db.prepare("INSERT INTO landing_stats (label, value) VALUES ('Research Modules', '25+')").run();
-    db.prepare("INSERT INTO landing_stats (label, value) VALUES ('Student Engagement', '98%')").run();
-    db.prepare("INSERT INTO landing_stats (label, value) VALUES ('Digital Support', '24/7')").run();
-
-    // Seed Personas
-    const insertPersona = db.prepare("INSERT INTO personas (title, description, icon, cta_text, target_view, color_class) VALUES (?,?,?,?,?,?)");
-    insertPersona.run("For Students", "Personalized emotional tracking.", "graduation-cap", "Start as Student", "checkin", "text-indigo-600");
-
-    // Seed Features
-    const insertFeature = db.prepare("INSERT INTO features (title, description, icon, bg_class, text_class) VALUES (?,?,?,?,?)");
-    insertFeature.run("Psychology of Well-being", "Explore research on mental health.", "brain", "bg-indigo-50", "text-indigo-600");
+    db.prepare("INSERT INTO landing_stats (label, value) VALUES ('Wellbeing Checks', '5,000+'), ('Research Modules', '25+'), ('Student Engagement', '98%'), ('Digital Support', '24/7')").run();
 
     // Seed Lessons
     const insertLesson = db.prepare("INSERT INTO lessons (id, title, duration, description, video_url, module) VALUES (?, ?, ?, ?, ?, ?)");
@@ -91,7 +87,7 @@ if (userCount === 0) {
     insertLesson.run(11, 'Positive Psychology Era', '23:15', 'Martin Seligman on human flourishing.', 'https://www.youtube.com/embed/9FBxfd7DL3E', 'Community_Wellbeing');
     insertLesson.run(12, 'Inequality & Technology', '10:40', 'Exploring digital exclusion and social inequality.', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'Community_Wellbeing');
 
-    // --- ONE-TIME FILE SCAN ---
+    // --- FILE SCAN ---
     const baseDir = path.resolve(__dirname, 'Digital Learning');
     const modules = ['Constructivism', 'Digital_SEL', 'Community_Wellbeing'];
     const insertResource = db.prepare("INSERT INTO resources (name, type, week, category, summary, points, blog_url, module, file_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");

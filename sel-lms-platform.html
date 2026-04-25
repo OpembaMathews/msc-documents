@@ -6,6 +6,7 @@
     <title>Nexus Learning | NTUST SEMINAR</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
@@ -15,10 +16,44 @@
         .glass-card { background: white; border: 1px solid #e2e8f0; border-radius: 24px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1); }
         .video-box { aspect-ratio: 16 / 9; background: #000; border-radius: 32px; overflow: hidden; }
         .hidden { display: none !important; }
+        .login-gradient { background: radial-gradient(circle at top left, #4f46e5 0%, #7c3aed 100%); }
     </style>
 </head>
 <body class="antialiased text-slate-900">
-    <div class="min-h-screen flex flex-col">
+    
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen" class="fixed inset-0 z-[200] login-gradient flex items-center justify-center p-6">
+        <div class="bg-white rounded-[48px] max-w-lg w-full p-12 text-center space-y-8 shadow-2xl">
+            <div class="space-y-4">
+                <div class="w-20 h-20 bg-indigo-600 rounded-[28px] flex items-center justify-center text-white font-bold text-4xl mx-auto shadow-xl">N</div>
+                <h1 class="text-4xl font-black tracking-tight text-slate-900">Nexus Learning</h1>
+                <p class="text-slate-500 text-lg">Master of Science Seminar Portal. Please sign in to track your personal learning progress.</p>
+            </div>
+            
+            <div class="py-4 flex flex-col items-center">
+                <div id="g_id_onload"
+                     data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+                     data-context="signin"
+                     data-ux_mode="popup"
+                     data-callback="handleCredentialResponse"
+                     data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin"
+                     data-type="standard"
+                     data-shape="pill"
+                     data-theme="outline"
+                     data-text="signin_with"
+                     data-size="large"
+                     data-logo_alignment="left">
+                </div>
+            </div>
+
+            <p class="text-xs text-slate-400">NTUST Graduate Seminar VE5208701 / VE5914701 / VE5915701</p>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="appRoot" class="min-h-screen flex flex-col hidden">
         
         <!-- TOP NAVIGATION -->
         <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-8">
@@ -43,14 +78,12 @@
                     </div>
                 </div>
 
-                <div class="flex items-center space-x-3 pl-8 border-l border-slate-100">
-                    <div class="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-600">
-                        <i data-lucide="user" class="w-4 h-4"></i>
+                <div class="flex items-center space-x-4 pl-8 border-l border-slate-100">
+                    <div class="text-right">
+                        <p id="userName" class="text-xs font-bold leading-none">Scholar</p>
+                        <p onclick="logout()" class="text-[10px] text-indigo-500 font-bold mt-1 cursor-pointer hover:underline uppercase tracking-widest">Logout</p>
                     </div>
-                    <div class="hidden md:block text-right">
-                        <p class="text-xs font-bold leading-none">NTUST Scholar</p>
-                        <p class="text-[10px] text-slate-400 mt-1">Graduate Seminar</p>
-                    </div>
+                    <img id="userPicture" src="" class="w-10 h-10 rounded-full border-2 border-white shadow-sm bg-slate-100" />
                 </div>
             </div>
         </nav>
@@ -62,7 +95,7 @@
             <section id="view-landing" class="max-w-6xl mx-auto space-y-12 py-10">
                 <div class="text-center space-y-4">
                     <h1 class="text-7xl font-bold text-slate-900 leading-tight tracking-tight">Your Learning <span class="text-indigo-600">Nexus.</span></h1>
-                    <p class="text-xl text-slate-500 max-w-2xl mx-auto">Access your YouTube learning path and research documents from the menu above.</p>
+                    <p class="text-xl text-slate-500 max-w-2xl mx-auto">Track your credits and explore the curriculum from the menu above.</p>
                 </div>
                 <div id="statsGrid" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-10">
@@ -94,9 +127,7 @@
             <section id="view-course" class="hidden max-w-7xl mx-auto">
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
                     
-                    <!-- Left Column: Video & Docs -->
                     <div class="lg:col-span-3 space-y-6">
-                        <!-- Reduced Size Video Box -->
                         <div class="video-box shadow-2xl bg-slate-900 ring-4 ring-white relative overflow-hidden">
                             <iframe id="mainPlayer" class="w-full h-full" src="" frameborder="0" allowfullscreen></iframe>
                             <div id="completionOverlay" class="absolute inset-0 bg-emerald-600/90 backdrop-blur-md flex flex-col items-center justify-center text-white hidden">
@@ -106,7 +137,6 @@
                             </div>
                         </div>
 
-                        <!-- Action Bar -->
                         <div class="flex items-center justify-between bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
                             <div class="flex items-center space-x-3 pl-2">
                                 <span class="px-2 py-1 bg-indigo-50 text-indigo-600 text-[9px] font-bold uppercase tracking-widest rounded">Active</span>
@@ -118,14 +148,13 @@
                             </button>
                         </div>
 
-                        <!-- Course Title & Progress -->
                         <div class="flex items-end justify-between pt-4">
                             <div>
                                 <h2 id="courseTitle" class="text-4xl font-bold tracking-tight text-slate-900">Course Title</h2>
-                                <p class="text-slate-500 mt-1">Academic insights and research summaries.</p>
+                                <p class="text-slate-500 mt-1">Research summaries and academic insights.</p>
                             </div>
                             <div class="text-right">
-                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Credits</p>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Your Credits</p>
                                 <div class="flex items-center space-x-1.5">
                                     <span id="moduleCredits" class="text-xl font-black text-indigo-600">0.0</span>
                                     <span class="text-slate-400 font-bold text-sm">/ 3.0</span>
@@ -133,11 +162,9 @@
                             </div>
                         </div>
 
-                        <!-- Resource Grid -->
                         <div id="courseDocs" class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4"></div>
                     </div>
 
-                    <!-- Right Column: Learning Path -->
                     <div class="space-y-6">
                         <div class="bg-white p-6 rounded-[32px] border border-slate-200 shadow-sm">
                             <div class="flex items-center justify-between mb-6 px-1">
@@ -150,7 +177,6 @@
                             <div id="videoList" class="space-y-3"></div>
                         </div>
                     </div>
-
                 </div>
             </section>
         </main>
@@ -158,7 +184,7 @@
 
     <!-- PREVIEW MODAL -->
     <div id="previewModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-sm hidden">
-        <div class="bg-white rounded-[40px] max-w-2xl w-full shadow-2xl overflow-hidden">
+        <div class="bg-white rounded-[40px] max-w-2xl w-full shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
             <div class="p-10 space-y-8">
                 <div class="flex justify-between items-start">
                     <div class="space-y-2">
@@ -197,40 +223,81 @@
         const API_URL = '/api';
         let allLessons = [];
         let allResources = [];
-        let userState = { completedLessons: [] };
+        let userState = null;
         let currentLessonId = null;
 
         async function init() {
-            const res = await fetch(`${API_URL}/init-data`);
-            const data = await res.json();
+            // Initial check for session
+            const stateRes = await fetch(`${API_URL}/state`);
+            if (stateRes.ok) {
+                userState = await stateRes.json();
+                setupUIForUser();
+            } else {
+                showLogin();
+            }
+
+            // Global data (can be fetched anytime)
+            const initRes = await fetch(`${API_URL}/init-data`);
+            const data = await initRes.json();
             allLessons = data.lessons;
             
-            await fetchState();
-            
-            const statsCont = document.getElementById('statsGrid');
-            statsCont.innerHTML = data.stats.map(s => {
-                let value = s.value;
-                let label = s.label;
-                if (s.label === 'Research Modules') {
-                    value = (userState.completedLessons.length * 0.75).toFixed(2);
-                    label = 'Credits Earned (Max 9)';
-                }
-                return `
-                    <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm text-center">
-                        <p class="text-3xl font-bold text-indigo-600">${value}</p>
-                        <p class="text-xs font-bold text-slate-400 uppercase mt-1 tracking-widest">${label}</p>
-                    </div>
-                `;
-            }).join('');
-
             const resData = await fetch(`${API_URL}/resources`);
             allResources = await resData.json();
+            
             lucide.createIcons();
         }
 
-        async function fetchState() {
-            const res = await fetch(`${API_URL}/state`);
-            userState = await res.json();
+        async function handleCredentialResponse(response) {
+            const res = await fetch(`${API_URL}/auth/google`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ credential: response.credential })
+            });
+            
+            if (res.ok) {
+                await init();
+            }
+        }
+
+        function setupUIForUser() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('appRoot').classList.remove('hidden');
+            document.getElementById('userName').innerText = userState.user.name;
+            document.getElementById('userPicture').src = userState.user.picture;
+            
+            // Refresh stats on dashboard
+            const statsGrid = document.getElementById('statsGrid');
+            const totalCredits = (userState.completedLessons.length * 0.75).toFixed(2);
+            
+            statsGrid.innerHTML = `
+                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm text-center">
+                    <p class="text-3xl font-bold text-indigo-600">${totalCredits}</p>
+                    <p class="text-xs font-bold text-slate-400 uppercase mt-1 tracking-widest">Total Credits Earned</p>
+                </div>
+                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm text-center">
+                    <p class="text-3xl font-bold text-indigo-600">${userState.completedLessons.length}</p>
+                    <p class="text-xs font-bold text-slate-400 uppercase mt-1 tracking-widest">Completed Lessons</p>
+                </div>
+                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm text-center">
+                    <p class="text-3xl font-bold text-indigo-600">9.00</p>
+                    <p class="text-xs font-bold text-slate-400 uppercase mt-1 tracking-widest">Required Credits</p>
+                </div>
+                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm text-center">
+                    <p class="text-3xl font-bold text-indigo-600">${Math.round((totalCredits/9)*100)}%</p>
+                    <p class="text-xs font-bold text-slate-400 uppercase mt-1 tracking-widest">Degree Progress</p>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        function showLogin() {
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('appRoot').classList.add('hidden');
+        }
+
+        async function logout() {
+            await fetch(`${API_URL}/auth/logout`, { method: 'POST' });
+            window.location.reload();
         }
 
         function showView(view) {
@@ -241,13 +308,12 @@
             if (view === 'landing') {
                 document.getElementById('view-landing').classList.remove('hidden');
                 document.getElementById('nav-landing').classList.add('active');
-                init(); // Refresh stats
+                setupUIForUser(); // Refresh dashboard
             }
         }
 
         function showCourse(module) {
             showView('course');
-            document.getElementById('view-course').classList.remove('hidden');
             document.getElementById(`nav-${module}`).classList.add('active');
 
             const moduleName = module.replace('_', ' ');
@@ -263,14 +329,14 @@
             videoList.innerHTML = courseLessons.map(l => {
                 const isComplete = userState.completedLessons.includes(l.id);
                 return `
-                    <div id="video-card-${l.id}" onclick="playVideo('${l.video_url}', ${l.id}, '${l.title}')" class="video-card bg-white p-5 rounded-3xl border border-slate-200 cursor-pointer hover:border-indigo-600 transition-all shadow-sm flex items-center justify-between">
-                        <div>
+                    <div id="video-card-${l.id}" onclick="playVideo('${l.video_url}', ${l.id}, '${l.title}')" class="video-card bg-white p-5 rounded-3xl border border-slate-200 cursor-pointer hover:border-indigo-600 transition-all shadow-sm flex items-center justify-between group">
+                        <div class="truncate pr-4">
                             <p class="text-[10px] font-bold ${isComplete ? 'text-emerald-500' : 'text-indigo-600'} uppercase mb-1">
                                 ${isComplete ? 'COMPLETED' : l.duration}
                             </p>
-                            <h4 class="font-bold text-sm leading-tight">${l.title}</h4>
+                            <h4 class="font-bold text-xs leading-tight truncate">${l.title}</h4>
                         </div>
-                        ${isComplete ? '<i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i>' : ''}
+                        ${isComplete ? '<i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 shrink-0"></i>' : '<i data-lucide="play" class="w-4 h-4 text-slate-300 group-hover:text-indigo-600 shrink-0"></i>'}
                     </div>
                 `;
             }).join('');
@@ -334,7 +400,7 @@
             } else {
                 overlay.classList.add('hidden');
                 completeBtn.classList.remove('opacity-50', 'pointer-events-none');
-                completeBtn.innerHTML = '<i data-lucide="check-circle-2" class="w-4 h-4 mr-2"></i> Mark as Complete';
+                completeBtn.innerHTML = '<i data-lucide="check-circle-2" class="w-4 h-4 mr-2"></i> Mark Complete';
             }
 
             document.querySelectorAll('.video-card').forEach(card => card.classList.remove('ring-4', 'ring-indigo-100', 'border-indigo-600', 'bg-indigo-50'));
@@ -345,7 +411,6 @@
 
         async function markComplete() {
             if (!currentLessonId) return;
-            
             const res = await fetch(`${API_URL}/progress`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -353,9 +418,10 @@
             });
 
             if (res.ok) {
-                await fetchState();
+                const stateRes = await fetch(`${API_URL}/state`);
+                userState = await stateRes.json();
                 const lesson = allLessons.find(l => l.id === currentLessonId);
-                showCourse(lesson.module); // Refresh view
+                showCourse(lesson.module);
             }
         }
 

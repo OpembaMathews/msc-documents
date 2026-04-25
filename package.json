@@ -16,7 +16,10 @@
   "dependencies": {
     "better-sqlite3": "^11.8.1",
     "body-parser": "^2.2.2",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "google-auth-library": "^10.6.2",
+    "jsonwebtoken": "^9.0.3"
   }
 }
