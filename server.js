@@ -2,7 +2,8 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const db = require('./database');
+const fs = require('fs');
+const { db, syncResources } = require('./database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -10,6 +11,22 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(__dirname));
+
+// --- REAL-TIME FILE WATCHER ---
+const watchPath = path.resolve(__dirname, 'Digital Learning');
+if (fs.existsSync(watchPath)) {
+    console.log(`👀 Watching for changes in: ${watchPath}`);
+    // Watch recursively for changes in the research folders
+    fs.watch(watchPath, { recursive: true }, (eventType, filename) => {
+        if (filename && !filename.startsWith('.')) {
+            console.log(`🔔 Change detected: ${filename} (${eventType})`);
+            syncResources();
+        }
+    });
+}
+
+// Initial sync on startup
+syncResources();
 
 // --- FRONTEND ROUTE ---
 app.get('/', (req, res) => {
