@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Blog | Research Insights</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Merriweather:wght@400;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #ffffff; }
+        .prose-serif { font-family: 'Merriweather', serif; }
+        .gradient-text { background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body class="antialiased">
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
+        <div class="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="/" class="flex items-center space-x-2 text-indigo-600 hover:text-indigo-700 transition-all">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                <span class="font-bold text-sm">Back to Dashboard</span>
+            </a>
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-xs">N</div>
+                <span class="font-bold tracking-tight text-slate-900">NEXUS BLOG</span>
+            </div>
+        </div>
+    </nav>
+
+    <article id="blogContent" class="max-w-3xl mx-auto px-6 py-16 space-y-12">
+        <div class="space-y-6">
+            <div id="categoryTag" class="px-3 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-bold uppercase tracking-widest inline-block rounded-md">Loading...</div>
+            <h1 id="postTitle" class="text-5xl font-extrabold text-slate-900 leading-[1.1] tracking-tight">Loading post title...</h1>
+            <div class="flex items-center space-x-4 text-slate-400 text-sm">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="calendar" class="w-4 h-4"></i>
+                    <span id="postDate">April 2026</span>
+                </div>
+                <span>•</span>
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="clock" class="w-4 h-4"></i>
+                    <span>8 min read</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="h-[400px] w-full bg-slate-100 rounded-[32px] overflow-hidden">
+            <img id="postImage" src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover" alt="Hero">
+        </div>
+
+        <div class="prose-serif text-xl leading-relaxed text-slate-700 space-y-8">
+            <p id="postIntro" class="font-bold text-slate-900 text-2xl">Loading introduction...</p>
+            <div id="postBody" class="space-y-6">
+                <!-- Content will be injected here -->
+            </div>
+        </div>
+
+        <footer class="pt-16 border-t border-slate-100">
+            <div class="bg-slate-50 rounded-3xl p-8 flex flex-col items-center text-center space-y-4">
+                <div class="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center text-indigo-600 mb-2">
+                    <i data-lucide="book-open-check" class="w-8 h-8"></i>
+                </div>
+                <h4 class="text-xl font-bold">Deepen your Knowledge</h4>
+                <p class="text-slate-500 max-w-sm">This blog post is a summarized version of the actual research document available in the NTUST Master of Science curriculum.</p>
+                <button onclick="window.history.back()" class="px-8 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100">
+                    Explore More Documents
+                </button>
+            </div>
+        </footer>
+    </article>
+
+    <script>
+        async function loadPost() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            
+            if (!id) {
+                window.location.href = '/';
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/resources');
+                const resources = await res.json();
+                const post = resources.find(r => r.id == id);
+
+                if (!post) throw new Error('Post not found');
+
+                document.title = `${post.name} | Nexus Blog`;
+                document.getElementById('postTitle').innerText = post.name;
+                document.getElementById('categoryTag').innerText = post.module.replace('_', ' ');
+                document.getElementById('postIntro').innerText = post.summary;
+                
+                const bodyCont = document.getElementById('postBody');
+                bodyCont.innerHTML = `
+                    <p>Researching ${post.name} within the context of ${post.module} reveals critical insights into modern educational frameworks. This document explores the intersections of theory and practice, providing a foundation for graduate-level analysis.</p>
+                    
+                    <h2 class="text-3xl font-bold text-slate-900 mt-12 mb-4 prose-serif">Key Insights</h2>
+                    <ul class="space-y-4 list-none pl-0">
+                        ${post.points.map(p => `
+                            <li class="flex items-start space-x-4">
+                                <span class="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center shrink-0 mt-1">
+                                    <i data-lucide="check" class="w-4 h-4"></i>
+                                </span>
+                                <span>${p}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+
+                    <h2 class="text-3xl font-bold text-slate-900 mt-12 mb-4 prose-serif">Theoretical Implications</h2>
+                    <p>The findings presented here suggest a significant shift in how we approach ${post.category} within digital learning environments. By examining these conversion factors through the lens of the Capability Approach, we can better understand the nuances of student engagement and success.</p>
+                    
+                    <blockquote class="border-l-4 border-indigo-600 pl-6 italic text-slate-500 my-8">
+                        "The goal of digital innovation is not merely to provide resources, but to expand the real freedoms people have to lead lives they value."
+                    </blockquote>
+
+                    <p>In conclusion, this document serves as a vital component of the MSc Seminar curriculum at Taiwan Tech (NTUST), bridging the gap between social-emotional learning and technological advancement.</p>
+                `;
+
+                lucide.createIcons();
+            } catch (err) {
+                console.error(err);
+                document.getElementById('blogContent').innerHTML = `<div class="text-center py-20"><h1 class="text-4xl font-bold">Post not found</h1><a href="/" class="text-indigo-600 mt-4 block">Return home</a></div>`;
+            }
+        }
+
+        loadPost();
+    </script>
+</body>
+</html>

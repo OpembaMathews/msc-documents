@@ -16,6 +16,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'sel-lms-platform.html'));
 });
 
+app.get('/blog', (req, res) => {
+    res.sendFile(path.join(__dirname, 'blog.html'));
+});
+
 // --- API ROUTES ---
 
 // 1. Get Global App Data (Landing + Personas + Features + Quotes + Lessons)

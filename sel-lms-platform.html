@@ -98,32 +98,66 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h2 id="courseTitle" class="text-4xl font-bold">Course Title</h2>
-                        <p id="courseDesc" class="text-slate-500 mt-2">Access your module videos and documents.</p>
+                        <p class="text-slate-500 mt-2">Access your curriculum and research blog summaries.</p>
                     </div>
                 </div>
 
-                <!-- LEARNING PATH (VIDEOS) -->
-                <div class="space-y-6">
-                    <h3 class="text-xl font-bold flex items-center"><i data-lucide="play-circle" class="w-6 h-6 mr-2 text-indigo-600"></i> Learning Path</h3>
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        <div class="lg:col-span-2">
-                            <div class="video-box shadow-2xl overflow-hidden bg-slate-900 border-4 border-white">
-                                <iframe id="mainPlayer" class="w-full h-full" src="" frameborder="0" allowfullscreen></iframe>
-                            </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                    <!-- Video Player Column -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="video-box shadow-2xl shadow-indigo-100 bg-slate-900 ring-1 ring-slate-800">
+                            <iframe id="mainPlayer" class="w-full h-full" src="" frameborder="0" allowfullscreen></iframe>
                         </div>
-                        <div class="space-y-4">
-                            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Video Playlist</p>
-                            <div id="videoList" class="space-y-3"></div>
-                        </div>
+                        <div id="courseDocs" class="grid grid-cols-2 gap-6 pt-6"></div>
                     </div>
-                </div>
 
-                <!-- RESOURCE LIBRARY (DOCUMENTS) -->
-                <div class="space-y-6 pt-12 border-t border-slate-200">
-                    <h3 class="text-xl font-bold flex items-center"><i data-lucide="file-text" class="w-6 h-6 mr-2 text-indigo-600"></i> Course Resources</h3>
-                    <div id="courseDocs" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+                    <!-- Video Playlist Column -->
+                    <div class="space-y-4 bg-white p-6 rounded-[32px] border border-slate-200 shadow-sm">
+                        <h3 class="font-bold text-lg px-2 mb-4">Course Lessons</h3>
+                        <div id="videoList" class="space-y-3"></div>
+                    </div>
                 </div>
             </section>
+        </main>
+    </div>
+
+    <!-- PREVIEW MODAL -->
+    <div id="previewModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-sm hidden">
+        <div class="bg-white rounded-[40px] max-w-2xl w-full shadow-2xl overflow-hidden">
+            <div class="p-10 space-y-8">
+                <div class="flex justify-between items-start">
+                    <div class="space-y-2">
+                        <span id="modalType" class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-indigo-50 text-indigo-600">PDF</span>
+                        <h2 id="modalTitle" class="text-3xl font-bold text-slate-900 leading-tight">Document Title</h2>
+                    </div>
+                    <button onclick="closeModal()" class="p-2 hover:bg-slate-100 rounded-full transition-all">
+                        <i data-lucide="x" class="w-6 h-6 text-slate-400"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Executive Summary</h4>
+                        <p id="modalSummary" class="text-slate-600 leading-relaxed text-lg">Detailed summary of the document content goes here...</p>
+                    </div>
+
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Key Research Takeaways</h4>
+                        <ul id="modalPoints" class="grid grid-cols-1 gap-3"></ul>
+                    </div>
+                </div>
+
+                <div class="pt-4 flex items-center space-x-4">
+                    <a id="blogLink" href="#" class="flex-1 bg-indigo-600 text-white py-4 rounded-2xl font-bold text-center hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100">
+                        Read Full Blog Post
+                    </a>
+                    <button onclick="closeModal()" class="px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
         </main>
     </div>
 
@@ -186,7 +220,7 @@
             const courseDocs = allResources.filter(r => r.module === module);
             const docsCont = document.getElementById('courseDocs');
             docsCont.innerHTML = courseDocs.map(r => `
-                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:border-indigo-600 transition-all group">
+                <div class="bg-white p-6 rounded-[32px] border border-slate-200 shadow-sm hover:border-indigo-600 transition-all group">
                     <div class="flex justify-between items-start mb-6">
                         <div class="p-3 bg-slate-50 rounded-2xl text-slate-400 group-hover:text-indigo-600 group-hover:bg-indigo-50 transition-all">
                             <i data-lucide="${r.type === 'pdf' ? 'file-text' : 'presentation'}" class="w-6 h-6"></i>
@@ -194,12 +228,33 @@
                         <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">${r.type}</span>
                     </div>
                     <h4 class="font-bold text-lg mb-2">${r.name}</h4>
-                    <p class="text-xs text-slate-500 mb-6">Academic document from your ${moduleName} folder.</p>
-                    <button class="w-full py-3 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-indigo-600 transition-all">Open Document</button>
+                    <p class="text-xs text-slate-500 mb-6">Master's research document overview.</p>
+                    <button onclick="openPreview(${r.id})" class="w-full py-3 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-indigo-600 transition-all">Preview Insight</button>
                 </div>
             `).join('');
             
             lucide.createIcons();
+        }
+
+        function openPreview(id) {
+            const res = allResources.find(r => r.id === id);
+            document.getElementById('modalTitle').innerText = res.name;
+            document.getElementById('modalType').innerText = res.type;
+            document.getElementById('modalSummary').innerText = res.summary;
+            document.getElementById('blogLink').href = `/blog?id=${res.id}`;
+            document.getElementById('modalPoints').innerHTML = res.points.map(p => `
+                <li class="flex items-center space-x-3 text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i>
+                    <span class="text-sm font-medium">${p}</span>
+                </li>
+            `).join('');
+            
+            document.getElementById('previewModal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            document.getElementById('previewModal').classList.add('hidden');
         }
 
         function playVideo(url, id) {

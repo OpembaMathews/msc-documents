@@ -140,6 +140,18 @@ if (userCount === 0) {
     const modules = ['Constructivism', 'Digital_SEL', 'Community_Wellbeing'];
     const insertResource = db.prepare("INSERT INTO resources (name, type, week, category, summary, points, blog_url, module) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
+    const summaries = {
+        'Constructivism': 'This research explores how learners actively construct knowledge through cognitive and social frameworks. It provides a foundational understanding of student-centered learning environments.',
+        'Digital_SEL': 'An analysis of social-emotional learning competencies in the digital age, focusing on emotional regulation and digital citizenship within virtual spaces.',
+        'Community_Wellbeing': 'Investigating collective flourishing through the lens of the Capability Approach, focusing on digital inclusion and social justice in educational communities.'
+    };
+
+    const keyPoints = {
+        'Constructivism': 'Knowledge Construction,Schema Theory,Social Mediation,Active Discovery',
+        'Digital_SEL': 'Self-Regulation,Digital Resilience,Responsible Connectivity,Online Empathy',
+        'Community_Wellbeing': 'Capability Deprivation,Social Cohesion,Digital Inclusion,Collective Agency'
+    };
+
     modules.forEach(mod => {
         const modPath = path.join(baseDir, mod);
         if (fs.existsSync(modPath)) {
@@ -155,9 +167,9 @@ if (userCount === 0) {
                     ext,
                     "01-14",
                     "reading",
-                    `Academic material from the ${mod} folder.`,
-                    "Research,Analysis,Theory",
-                    "#",
+                    summaries[mod] || `Academic material from the ${mod} folder.`,
+                    keyPoints[mod] || "Research,Analysis,Theory",
+                    `/blog?id=AUTO`,
                     mod
                 );
             });
