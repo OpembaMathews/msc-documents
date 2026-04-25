@@ -116,11 +116,11 @@ if (userCount === 0) {
 
     // Seed Lessons with New YouTube Videos
     const insertLesson = db.prepare("INSERT INTO lessons (id, title, duration, description, video_url, module) VALUES (?, ?, ?, ?, ?, ?)");
-    insertLesson.run(1, 'Piaget vs. Vygotsky', '03:45', 'A concise comparison of cognitive and social constructivism.', 'https://www.youtube.com/embed/Jp_v_6-v_6k', 'Constructivism');
-    insertLesson.run(2, 'The Capability Approach', '12:30', 'Amartya Sen’s framework for social inclusion and wellbeing.', 'https://www.youtube.com/embed/H3lRkFFH7_U', 'Community_Wellbeing');
-    insertLesson.run(3, 'Digital Wellbeing Science', '03:15', 'Understanding how tech habits affect your mental health.', 'https://www.youtube.com/embed/v_v_v_v_v_v', 'Digital_SEL');
-    insertLesson.run(4, 'Constructivist Theory', '15:20', 'Deep dive into schemas, ZPD, and scaffolding.', 'https://www.youtube.com/embed/f_2_6_6_6_6', 'Constructivism');
-    insertLesson.run(5, 'Giambattista Vico', '10:15', 'The philosophical roots of constructivism: Verum Factum.', 'https://www.youtube.com/embed/3_3_3_3_3_3', 'Constructivism');
+    insertLesson.run(1, 'Piaget vs. Vygotsky', '03:45', 'A concise comparison of cognitive and social constructivism.', 'https://www.youtube.com/embed/m_S9Vv_9_9M', 'Constructivism');
+    insertLesson.run(2, 'The Science of Well-Being', '12:30', 'Yale Professor Laurie Santos on the psychological foundations of happiness.', 'https://www.youtube.com/embed/H3lRkFFH7_U', 'Digital_SEL');
+    insertLesson.run(3, 'Vygotsky’s Theory', '04:15', 'Understanding the Zone of Proximal Development and Social Development Theory.', 'https://www.youtube.com/embed/8I2hrSRbmHE', 'Constructivism');
+    insertLesson.run(4, 'Piaget’s Theory', '06:15', 'A breakdown of cognitive development stages and schemas.', 'https://www.youtube.com/embed/IhcgYgx7aAA', 'Constructivism');
+    insertLesson.run(5, 'Giambattista Vico', '10:15', 'The philosophical roots of constructivism: Verum Factum.', 'https://www.youtube.com/embed/8swo4fvHU4Y', 'Constructivism');
 
     // --- AUTOMATIC FILE SCANNING ---
     const baseDir = path.resolve(__dirname, 'Digital Learning');
