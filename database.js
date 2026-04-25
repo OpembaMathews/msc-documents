@@ -116,11 +116,24 @@ if (userCount === 0) {
 
     // Seed Lessons with New YouTube Videos
     const insertLesson = db.prepare("INSERT INTO lessons (id, title, duration, description, video_url, module) VALUES (?, ?, ?, ?, ?, ?)");
+    
+    // Constructivism
     insertLesson.run(1, 'Piaget vs. Vygotsky', '03:45', 'A concise comparison of cognitive and social constructivism.', 'https://www.youtube.com/embed/m_S9Vv_9_9M', 'Constructivism');
-    insertLesson.run(2, 'The Science of Well-Being', '12:30', 'Yale Professor Laurie Santos on the psychological foundations of happiness.', 'https://www.youtube.com/embed/H3lRkFFH7_U', 'Digital_SEL');
     insertLesson.run(3, 'Vygotsky’s Theory', '04:15', 'Understanding the Zone of Proximal Development and Social Development Theory.', 'https://www.youtube.com/embed/8I2hrSRbmHE', 'Constructivism');
     insertLesson.run(4, 'Piaget’s Theory', '06:15', 'A breakdown of cognitive development stages and schemas.', 'https://www.youtube.com/embed/IhcgYgx7aAA', 'Constructivism');
     insertLesson.run(5, 'Giambattista Vico', '10:15', 'The philosophical roots of constructivism: Verum Factum.', 'https://www.youtube.com/embed/8swo4fvHU4Y', 'Constructivism');
+
+    // Digital SEL (VE5914701)
+    insertLesson.run(2, 'The Science of Well-Being', '12:30', 'Yale Professor Laurie Santos on the psychological foundations of happiness.', 'https://www.youtube.com/embed/H3lRkFFH7_U', 'Digital_SEL');
+    insertLesson.run(6, 'Social Media & Mental Health', '14:20', 'Bailey Parnell discusses the impact of social media on our wellbeing.', 'https://www.youtube.com/embed/Czg_9C7gw0o', 'Digital_SEL');
+    insertLesson.run(7, 'The CASEL Framework', '05:10', 'Understanding the five core competencies of Social Emotional Learning.', 'https://www.youtube.com/embed/7S0vEzeO-Z8', 'Digital_SEL');
+    insertLesson.run(8, 'The Digital Age Brain', '11:45', 'Dr. Imran Rashid on how technology influences human behavior.', 'https://www.youtube.com/embed/w7107s9SsqU', 'Digital_SEL');
+
+    // Community Wellbeing (VE5915701)
+    insertLesson.run(9, 'The Capability Approach', '08:50', 'Introduction to Amartya Sen’s framework for human development.', 'https://www.youtube.com/embed/fhzD-yCJvfM', 'Community_Wellbeing');
+    insertLesson.run(10, 'Digital Inclusion', '05:30', 'Why closing the digital divide is essential for community wellbeing.', 'https://www.youtube.com/embed/zJ51cfrB4Wk', 'Community_Wellbeing');
+    insertLesson.run(11, 'Positive Psychology Era', '23:15', 'Martin Seligman on human flourishing and building resilient communities.', 'https://www.youtube.com/embed/9FBxfd7DL3E', 'Community_Wellbeing');
+    insertLesson.run(12, 'Inequality & Technology', '10:40', 'Exploring how digital exclusion creates new forms of social inequality.', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'Community_Wellbeing');
 
     // --- AUTOMATIC FILE SCANNING ---
     const baseDir = path.resolve(__dirname, 'Digital Learning');
