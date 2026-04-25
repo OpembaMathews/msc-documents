@@ -201,7 +201,7 @@
 
         async function init() {
             try {
-                // Fetch global data first to avoid blank pages
+                // Fetch global data
                 const [initRes, resData] = await Promise.all([
                     fetch(`${API_URL}/init-data`),
                     fetch(`${API_URL}/resources`)
@@ -214,15 +214,56 @@
                 const stateRes = await fetch(`${API_URL}/state`);
                 if (stateRes.ok) {
                     userState = await stateRes.json();
-                    setupUIForUser();
-                } else {
-                    showLanding();
+                    refreshUserUI(); // Update buttons/names but stay on landing
                 }
+                
+                // Always start on landing unless explicitly toggled
+                showLanding();
             } catch (err) {
                 console.error("Init failed", err);
                 showLanding();
             }
             lucide.createIcons();
+        }
+
+        function refreshUserUI() {
+            if (!userState) return;
+
+            // Update Landing Page Buttons
+            const mainCta = document.querySelector('#publicLanding main button');
+            if (mainCta) {
+                mainCta.innerText = 'Enter Dashboard';
+                mainCta.onclick = () => {
+                    document.getElementById('publicLanding').classList.add('hidden');
+                    document.getElementById('appRoot').classList.remove('hidden');
+                    setupUIForUser();
+                };
+            }
+
+            const navCta = document.querySelector('#publicLanding nav button');
+            if (navCta) {
+                navCta.innerText = 'Go to Dashboard';
+                navCta.onclick = () => {
+                    document.getElementById('publicLanding').classList.add('hidden');
+                    document.getElementById('appRoot').classList.remove('hidden');
+                    setupUIForUser();
+                };
+            }
+
+            // Update Login Screen
+            const loginBox = document.querySelector('#loginScreen .space-y-4');
+            if (loginBox && !document.getElementById('continueBtn')) {
+                const continueBtn = document.createElement('button');
+                continueBtn.id = 'continueBtn';
+                continueBtn.className = 'w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold mt-4 shadow-lg hover:bg-indigo-700 transition-all';
+                continueBtn.innerText = `Continue as ${userState.user.name}`;
+                continueBtn.onclick = () => {
+                    document.getElementById('loginScreen').classList.add('hidden');
+                    document.getElementById('appRoot').classList.remove('hidden');
+                    setupUIForUser();
+                };
+                loginBox.appendChild(continueBtn);
+            }
         }
 
         async function handleCredentialResponse(response) {
@@ -231,13 +272,20 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ credential: response.credential })
             });
-            if (res.ok) await init();
+            if (res.ok) {
+                const stateRes = await fetch(`${API_URL}/state`);
+                userState = await stateRes.json();
+                refreshUserUI();
+                // Optionally auto-enter after fresh login
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('publicLanding').classList.add('hidden');
+                document.getElementById('appRoot').classList.remove('hidden');
+                setupUIForUser();
+            }
         }
 
         function setupUIForUser() {
-            document.getElementById('publicLanding').classList.add('hidden');
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('appRoot').classList.remove('hidden');
+            if (!userState) return;
             document.getElementById('userName').innerText = userState.user.name;
             document.getElementById('userPicture').src = userState.user.picture;
             
