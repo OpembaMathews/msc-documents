@@ -174,13 +174,13 @@
             const courseLessons = allLessons.filter(l => l.module === module);
             const videoList = document.getElementById('videoList');
             videoList.innerHTML = courseLessons.map(l => `
-                <div onclick="playVideo('${l.video_url}')" class="bg-white p-4 rounded-2xl border border-slate-200 cursor-pointer hover:border-indigo-600 transition-all">
+                <div id="video-card-${l.id}" onclick="playVideo('${l.video_url}', ${l.id})" class="video-card bg-white p-4 rounded-2xl border border-slate-200 cursor-pointer hover:border-indigo-600 transition-all">
                     <p class="text-[10px] font-bold text-indigo-600 uppercase mb-1">${l.duration}</p>
                     <h4 class="font-bold text-sm">${l.title}</h4>
                 </div>
             `).join('');
 
-            if (courseLessons.length > 0) playVideo(courseLessons[0].video_url);
+            if (courseLessons.length > 0) playVideo(courseLessons[0].video_url, courseLessons[0].id);
 
             // Render Documents
             const courseDocs = allResources.filter(r => r.module === module);
@@ -202,8 +202,17 @@
             lucide.createIcons();
         }
 
-        function playVideo(url) {
+        function playVideo(url, id) {
             document.getElementById('mainPlayer').src = url;
+            
+            // Focus indicator logic
+            document.querySelectorAll('.video-card').forEach(card => {
+                card.classList.remove('ring-2', 'ring-indigo-600', 'bg-indigo-50', 'border-indigo-600');
+            });
+            const activeCard = document.getElementById(`video-card-${id}`);
+            if (activeCard) {
+                activeCard.classList.add('ring-2', 'ring-indigo-600', 'bg-indigo-50', 'border-indigo-600');
+            }
         }
 
         init();

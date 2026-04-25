@@ -118,7 +118,7 @@ if (userCount === 0) {
     const insertLesson = db.prepare("INSERT INTO lessons (id, title, duration, description, video_url, module) VALUES (?, ?, ?, ?, ?, ?)");
     
     // Constructivism
-    insertLesson.run(1, 'Piaget vs. Vygotsky', '03:45', 'A concise comparison of cognitive and social constructivism.', 'https://www.youtube.com/embed/m_S9Vv_9_9M', 'Constructivism');
+    insertLesson.run(1, 'Piaget vs. Vygotsky', '03:45', 'A concise comparison of cognitive and social constructivism.', 'https://www.youtube.com/embed/yY-SXMzajH0', 'Constructivism');
     insertLesson.run(3, 'Vygotsky’s Theory', '04:15', 'Understanding the Zone of Proximal Development and Social Development Theory.', 'https://www.youtube.com/embed/8I2hrSRbmHE', 'Constructivism');
     insertLesson.run(4, 'Piaget’s Theory', '06:15', 'A breakdown of cognitive development stages and schemas.', 'https://www.youtube.com/embed/IhcgYgx7aAA', 'Constructivism');
     insertLesson.run(5, 'Giambattista Vico', '10:15', 'The philosophical roots of constructivism: Verum Factum.', 'https://www.youtube.com/embed/8swo4fvHU4Y', 'Constructivism');
